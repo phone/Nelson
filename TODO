@@ -1,0 +1,6 @@
+1) fuzzy file finder like ido mode finder in emacs
+2) finds all files in current directory where letters of QUERY appear in order in filename
+3) TAB selects next entry in list, gets re-set to beginning if QUERY changes
+4) SHIFT-TAB selects previous entry. Maybe arrow keys should work too.
+5) deleting past the last prefix char goes up a directory and re-lists from there.
+6) allow deleting, setting permissions (mostly exec), renaming, and maybe quicklook w/ hotkeys.
