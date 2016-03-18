@@ -1,5 +1,5 @@
 ## Nelson
-=====
+
 <img src="https://dl.dropboxusercontent.com/u/22430202/pic/Nelson.jpg" alt="typical derby" title="Typical Derby" align="left" height=492 width=345/>
 
 Nelson is a graphical filesystem navigation tool with fuzzy search. I usually run it from p9p acme when I need to navigate large codebases with lots of directories.
