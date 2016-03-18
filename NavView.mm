@@ -249,7 +249,7 @@
 	for (i = 0; i < [[self files] count]; ++i) {
 		[rslt addObject:[[self files] objectAtIndex:i]];
 	}
-	NSSortDescriptor *sd = [NSSortDescriptor sortDescriptorWithKey:@"mtime" ascending:YES];
+	NSSortDescriptor *sd = [NSSortDescriptor sortDescriptorWithKey:@"mtime" ascending:NO];
 	NSArray *srslt = [rslt sortedArrayUsingDescriptors:@[sd]];
 	[output appendString:[self cwd]];
 	[output appendString:@"/"];

@@ -1,6 +1,15 @@
-1) fuzzy file finder like ido mode finder in emacs
-2) finds all files in current directory where letters of QUERY appear in order in filename
-3) TAB selects next entry in list, gets re-set to beginning if QUERY changes
-4) SHIFT-TAB selects previous entry. Maybe arrow keys should work too.
-5) deleting past the last prefix char goes up a directory and re-lists from there.
+
+
+
+
+5) enter after a query w/ no results creates a file by that name, or a directory if it ends w/ '/'. 
+5a) if you create a directory, navigate into it after creation.
+5b) if the file ends in '*', set it to a+x after creation.
 6) allow deleting, setting permissions (mostly exec), renaming, and maybe quicklook w/ hotkeys.
+7) maybe set it up to read a .gitignore file and not list anything that matches .gitignore...
+	 -- A problem is that since it orders by mtime, your .o files are likely listed fairly high and have the
+ 	same name (minus ext) as your source files, so you have to type out your search + .c in order
+ 	to eliminate them. How often do you need fast nav to your .o files?
+8) allow arrow nav along query, so you can do '/' <- 'somequery' so you can e.g eliminate non-directories
+	then search. right now queries are append only.
+9) better display/selection graphics. I'd like it to look more like the 10.10 Spotlight search.

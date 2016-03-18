@@ -1,0 +1,4 @@
+#!/bin/sh
+./osx_build
+cp -r Nelson.app /Applications/
+ln -sf /Applications/Nelson.app/Contents/MacOS/Nelson /usr/local/bin/nelson

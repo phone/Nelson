@@ -1,5 +1,17 @@
-#!/bin/bash
-clang -g -Wall -DAX_OSX=1 -Wno-null-dereference -c osx_main.mm
-clang -g -Wall -DAX_OSX=1 -Wno-null-dereference -c NavWindow.mm
-clang -g -Wall -DAX_OSX=1 -Wno-null-dereference -c NavView.mm
-clang -g -Wall -DAX_OSX=1 -Wno-null-dereference -framework Cocoa -framework QuartzCore -framework OpenGL -framework IOKit -framework AudioUnit -o Nelson osx_main.o NavWindow.o NavView.o
+#!/bin/sh
+pushd seticon >/dev/null
+./osx_build
+popd >/dev/null
+clang -g -Wall -Wno-null-dereference -c osx_main.mm
+clang -g -Wall -Wno-null-dereference -c NavWindow.mm
+clang -g -Wall -Wno-null-dereference -c NavView.mm
+clang -g -Wall -Wno-null-dereference -framework Cocoa -framework QuartzCore -framework OpenGL -framework IOKit -framework AudioUnit -o Nelson osx_main.o NavWindow.o NavView.o
+rm -rf Nelson.app
+mkdir -p Nelson.app/Contents/MacOS
+mkdir -p Nelson.app/Contents/Resources
+cp Nelson Nelson.app/Contents/MacOS/Nelson
+cp lordnelson.icns Nelson.app/Contents/Resources/lordnelson.icns
+cp lordnelson.png Nelson.app/Contents/Resources/lordnelson.png
+cp info.plist Nelson.app/Contents/Info.plist
+seticon/seticon lordnelson.png Nelson.app/Contents/MacOS/Nelson
+

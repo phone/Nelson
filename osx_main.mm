@@ -25,7 +25,6 @@
 }
 @end
 
-
 void OSXCreateMainMenu() {
 	NSMenu* menubar = [NSMenu new]; 
 
