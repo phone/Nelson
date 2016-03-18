@@ -7,7 +7,6 @@
 #include "NavView.h"
 
 @implementation File
-
 @end
 
 @implementation NavView
@@ -26,10 +25,11 @@
 	}
 	char *cpath = (char *)calloc([path length], 1);
 	strcpy(cpath, [path UTF8String]);
-	fprintf(stderr, "plumb -d edit %s\n", cpath);
 	int err = execlp("plumb", "-dedit", cpath, nil);
 	if (err) {
+		fprintf(stderr, "plumb -d edit %s: ", cpath);
 		perror(nil);
+		fprintf(stderr, "\n");
 	}
 }
 
@@ -104,12 +104,12 @@
 	uint32_t i, j;
 	if (![self hasEntries])
 		return;
-	NSLog(@"BT: prevStart: %d, prevLen: %d", [self selStart], [self selLen]);
+	//NSLog(@"BT: prevStart: %d, prevLen: %d", [self selStart], [self selLen]);
 	[self unSelect];
 	/* If at beginning */
 	i = [self selStart];
 	if (i == [[self cwd] length] + [[self qry] length] + 2) {
-		NSLog(@"BT: At Beginning Detected!");
+		//NSLog(@"BT: At Beginning Detected!");
 		i = [[self output] length];
 	}
 	/* Move back until we see two spaces or the beginning of listing */
@@ -133,7 +133,7 @@
 	/* j will be set to index of first space after selected file, so j - i gets length */
 	[self setSelStart:i];
 	[self setSelLen:j - i];
-	NSLog(@"BT: newStart: %d, newLen: %d", [self selStart], [self selLen]);
+	//NSLog(@"BT: newStart: %d, newLen: %d", [self selStart], [self selLen]);
 	[self reSelect];
 }
 
@@ -163,7 +163,7 @@
 }
 
 - (void)insertText:(id)string {
-	NSLog(@"Received insertText: %@", string);
+	//NSLog(@"Received insertText: %@", string);
 	//[super insertText:string];  // have superclass insert it
 	[[self qry] appendString:string];
 	[self query];
@@ -180,7 +180,7 @@
 	if ([self cwd] == nil) {
 		[self setCwd:[fileManager currentDirectoryPath]];
 	}
-	NSLog(@"Populating at %@", [self cwd]);
+	//NSLog(@"Populating at %@", [self cwd]);
 	NSURL *cwd = [NSURL fileURLWithPath:[self cwd]];
 	NSArray *keys = @[
 		NSURLNameKey,
@@ -303,7 +303,7 @@
 -(void)render {
 	NSRange repl = {0, [self replLen]};
 	NSRange ins = {[[self cwd] length] + [[self qry] length] + 1, 0};
-	NSLog(@"selstart: %d sellen: %d, repllen: %d", [self selStart], [self selLen], [self replLen]);
+	//NSLog(@"selstart: %d sellen: %d, repllen: %d", [self selStart], [self selLen], [self replLen]);
 	[self setDrawsBackground:NO];
 	[self setRichText:YES];
 	[[self textStorage] replaceCharactersInRange:repl withString:[self output]];

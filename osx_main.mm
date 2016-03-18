@@ -22,9 +22,7 @@
 
 - (void)applicationWillTerminate:(NSApplication*)sender {
 	#pragma unused(sender)
-	printf("applicationWillTerminate\n");
 }
-
 @end
 
 
