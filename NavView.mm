@@ -45,6 +45,14 @@
 	[self insertNewline:sender];
 }
 
+- (void)changeDirectory:(NSString *)nwd {
+	[self setCwd:nwd];
+	[[self qry] deleteCharactersInRange:(NSRange){0, [[self qry] length]}];
+	[self populate];
+	[self query];
+	[self render];
+}
+
 - (void)insertNewline:(id)sender {
 	if ([[self output] characterAtIndex:[self selStart] + [self selLen] - 1] == '/') {
 		uint32_t cap = [[self cwd] length] + [self selLen] + 2;
@@ -53,11 +61,7 @@
 		[nwd appendString:@"/"];
 		[nwd appendString:[[self output]
 			substringWithRange:(NSRange){[self selStart],[self selLen] - 1}]];
-		[self setCwd:nwd];
-		[[self qry] deleteCharactersInRange:(NSRange){0, [[self qry] length]}];
-		[self populate];
-		[self query];
-		[self render];
+		[self changeDirectory:nwd];
 	} else {
 		[self plumb];
 	}
@@ -224,7 +228,7 @@
 			continue;
 		uint64_t mTime = (uint64_t)[mDate timeIntervalSince1970];
 		File *file = [File alloc];
-		//TODO: leaks
+		//TODO: leaks?
 		if ([isDirectory boolValue] == YES) {
 			[file setName:[name stringByAppendingString:@"/"]];
 		} else if ([isExecutable boolValue] == YES) {
@@ -303,14 +307,12 @@
 	[self setDrawsBackground:NO];
 	[self setRichText:YES];
 	[[self textStorage] replaceCharactersInRange:repl withString:[self output]];
-	[self setFont:[NSFont userFontOfSize:28]];
+	[self setFont:[NSFont userFontOfSize:24]];
 	[self reSelect];
 	[self setSelectedRange:ins];
 	[self setEditable:YES];
-}
-
--(void)renderToWindow:(NSWindow*)window {
-	[self render];
-	[self setFrame:[[window contentView] bounds]];
+	[self setContentHuggingPriority:NSLayoutPriorityFittingSizeCompression-1.0
+		forOrientation:NSLayoutConstraintOrientationVertical];
+	[self setFrame:[[[self parentWindow] contentView] bounds]];
 }
 @end

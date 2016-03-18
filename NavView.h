@@ -10,6 +10,7 @@
 @interface NavView : NSTextView
 //@property float width;
 //@property float height;
+@property (assign, readwrite) NSWindow *parentWindow;
 @property (assign, readwrite) uint32_t replLen;
 @property (retain, readwrite) NSString *output;
 @property (retain, readwrite) NSString *cwd;
@@ -20,6 +21,5 @@
 -(void)populate;
 -(void)query;
 -(void)render;
--(void)renderToWindow:(NSWindow *)window;
 -(void)reSelect;
 @end
