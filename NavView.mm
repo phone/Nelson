@@ -11,15 +11,10 @@
 
 @implementation NavView
 
-- (void)plumb {
-	if ([self selLen] == 0)
-		return;
-	uint32_t sz = [[self cwd] length] + [self selLen] + 2;
-	NSRange rng = {[self selStart], [self selLen]};
-	NSMutableString *path = [NSMutableString stringWithCapacity:sz];
-	[path appendString:[self cwd]];
-	[path appendString:@"/"];
-	[path appendString:[[self output] substringWithRange:rng]];
+- (void)plumb:(NSString *)data {
+	NSMutableString *path = [NSMutableString
+		stringWithCapacity:[data length]];
+	[path appendString:data];
 	if ([path characterAtIndex:[path length] - 1] == '*') {
 		[path deleteCharactersInRange:(NSRange){[path length] - 1, 1}];
 	}
@@ -31,6 +26,22 @@
 		perror(nil);
 		fprintf(stderr, "\n");
 	}
+}
+
+- (NSString *)getSelectedEntry {
+	if ([self selLen] == 0)
+		return @"";
+	NSRange rng = {[self selStart], [self selLen]};
+	return [[self output] substringWithRange:rng];
+}
+
+- (NSString *)getSelectedPath {
+	uint32_t sz = [[self cwd] length] + [self selLen] + 2;
+	NSMutableString *path = [NSMutableString stringWithCapacity:sz];
+	[path appendString:[self cwd]];
+	[path appendString:@"/"];
+	[path appendString:[self getSelectedEntry]];
+	return path;
 }
 
 - (void)keyDown:(NSEvent *)theEvent {
@@ -54,16 +65,55 @@
 }
 
 - (void)insertNewline:(id)sender {
-	if ([[self output] characterAtIndex:[self selStart] + [self selLen] - 1] == '/') {
-		uint32_t cap = [[self cwd] length] + [self selLen] + 2;
-		NSMutableString * nwd = [NSMutableString stringWithCapacity:cap];
-		[nwd appendString:[self cwd]];
-		[nwd appendString:@"/"];
-		[nwd appendString:[[self output]
-			substringWithRange:(NSRange){[self selStart],[self selLen] - 1}]];
-		[self changeDirectory:nwd];
+	if ([self hasEntries]) {
+		/* if directory is selected, descend into it, otherwise plumb file */
+		if ([[self output] characterAtIndex:[self selStart] + [self selLen] - 1] == '/') {
+			uint32_t cap = [[self cwd] length] + [self selLen] + 2;
+			NSMutableString * nwd = [NSMutableString stringWithCapacity:cap];
+			[nwd appendString:[self cwd]];
+			[nwd appendString:@"/"];
+			[nwd appendString:[[self output]
+				substringWithRange:(NSRange){[self selStart],[self selLen] - 1}]];
+			[self changeDirectory:nwd];
+		} else {
+			[self plumb:[self getSelectedPath]];
+		}
 	} else {
-		[self plumb];
+		if ([[self qry] length]) {
+			/* we got an [ENTER] w/ no entries, so we create a file or dir */
+			uint32_t cap = [[self cwd] length] + [[self qry] length] + 2;
+			NSFileManager *fm = [NSFileManager defaultManager];
+			NSMutableString *toMake = [NSMutableString stringWithCapacity:cap];
+			[toMake appendString:[self cwd]];
+			[toMake appendString:@"/"];
+			[toMake appendString:[self qry]];
+			if ([[self qry] characterAtIndex:[[self qry] length] - 1] == '/') {
+				/* directory case */
+				[toMake deleteCharactersInRange:(NSRange){[toMake length] - 1, 1}];
+				BOOL ok = [fm createDirectoryAtPath:toMake
+					withIntermediateDirectories:YES
+					attributes:nil
+					error:nil];
+				if (ok == NO) {
+					NSLog(@"failed to create %@", toMake);
+					//TODO(esp): error
+					return;
+				}
+				/* descend into new dir */
+				[self changeDirectory:toMake];
+			} else {
+				/* reg file case */
+				BOOL ok = [fm createFileAtPath:toMake
+					contents:nil
+					attributes:nil];
+				if (ok == NO) {
+					NSLog(@"failed to create %@", toMake);
+					//TODO(esp): error
+					return;
+				}
+				[self plumb:toMake];
+			}
+		}
 	}
 }
 

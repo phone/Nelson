@@ -1,9 +1,6 @@
 
 
 
-
-5) enter after a query w/ no results creates a file by that name, or a directory if it ends w/ '/'. 
-5a) if you create a directory, navigate into it after creation.
 5b) if the file ends in '*', set it to a+x after creation.
 6) allow deleting, setting permissions (mostly exec), renaming, and maybe quicklook w/ hotkeys.
 7) maybe set it up to read a .gitignore file and not list anything that matches .gitignore...
