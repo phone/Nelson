@@ -6,7 +6,7 @@ Nelson is a graphical filesystem navigation tool with fuzzy search. I usually ru
 
 ### Use
 
-* search: any character you type adds to the fuzzy search and narrows the directory listing appropriately.
+* `search`: any character you type adds to the fuzzy search and narrows the directory listing appropriately.
 * `[tab]`: select the next item in the list. If you're at the last item, it will cycle you back to the beginning.
 * `[shift-tab]`: backtab selects the previous item in the list. If you're at the first item, it cycles you to the last item.
 * `[backspace]`: delete a chacter from your search term. If your search term is empty, this moves you up one directory level.

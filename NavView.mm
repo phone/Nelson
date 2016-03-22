@@ -311,8 +311,18 @@
 		found = 0;
 		File *file = [srslt objectAtIndex:i];
 		for (j = 0; found < [[self qry] length] && j < [[file name] length]; ++j) {
-			if ([[file name] characterAtIndex:j] == [[self qry] characterAtIndex:found]) {
+			uint16_t fc = [[file name] characterAtIndex:j];
+			uint16_t qc = [[self qry] characterAtIndex:found];
+			if (fc == qc) {
 				++found;
+			} else if (fc >= 'A' && fc <= 'Z') {
+				if (fc + ('a' - 'A') == qc) {
+					++found;
+				}
+			} else if (fc >= 'a' && fc <= 'z') {
+				if (fc - ('a' - 'A') == qc) {
+					++found;
+				}
 			}
 			if (found == [[self qry] length]) {
 				break;
